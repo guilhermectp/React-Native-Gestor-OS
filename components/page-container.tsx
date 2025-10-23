@@ -6,14 +6,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = PropsWithChildren<{
   scrollable?: boolean;
+  edges?: readonly ("top" | "bottom" | "left" | "right")[];
 }>;
 
-export default function PageContainer({ children, scrollable = true }: Props) {
+const edgesDefault = ["top", "left", "right"] as const;
+
+export default function PageContainer({
+  children,
+  scrollable = true,
+  edges = edgesDefault,
+}: Props) {
   const backgroundColor = useThemeColor({}, "background");
 
   if (scrollable) {
     return (
-      <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+      <SafeAreaView style={styles.container} edges={edges}>
         <ScrollView
           style={[styles.container, { backgroundColor }]}
           contentContainerStyle={styles.contentContainer}
