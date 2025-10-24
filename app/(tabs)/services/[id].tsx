@@ -1,3 +1,4 @@
+import PageContainer from "@/components/page-container";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import UISelect from "@/components/ui/UISelect";
@@ -206,7 +207,7 @@ export default function DetailsServicePage() {
       />
 
       {service && (
-        <ThemedView>
+        <PageContainer edges={["left", "right"]}>
           {/* Header com OS e Status */}
           <ThemedView style={styles.headerSection}>
             <ThemedView style={styles.osNumberContainer}>
@@ -505,7 +506,7 @@ export default function DetailsServicePage() {
                   color="white"
                 />
                 <ThemedText style={styles.shareButtonText}>
-                  Compartilhar
+                  Enviar PDF
                 </ThemedText>
               </Pressable>
             </ThemedView>
@@ -521,7 +522,7 @@ export default function DetailsServicePage() {
               </ThemedText>
             </Pressable>
           </ThemedView>
-        </ThemedView>
+        </PageContainer>
       )}
     </>
   );
@@ -734,16 +735,16 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: "row",
-    gap: 12,
+    gap: 6,
   },
   actionButton: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
-    padding: 14,
-    borderRadius: 12,
+    gap: 6,
+    padding: 8,
+    borderRadius: 8,
     elevation: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
@@ -782,7 +783,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    paddingVertical: 12,
+    padding: 12,
     marginTop: 16, // ← Espaçamento acima
   },
   deleteButtonText: {
