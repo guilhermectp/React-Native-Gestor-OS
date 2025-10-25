@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Gestor OS 2.0",
+    "name": "Gestor OS",
     "slug": "GestorOS",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,10 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/splash-icon.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -24,7 +21,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/splash-icon.png"
     },
     "plugins": [
       "expo-router",
@@ -33,11 +30,7 @@
         {
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          "resizeMode": "contain"
         }
       ],
       "expo-sqlite"
@@ -49,7 +42,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "d2dd1809-ee55-4152-8b3f-a936b6501f85"
+        "projectId": "8acd7d8a-2fc0-4ab6-9b16-ab4f50226bbc"
       }
     },
     "owner": "pradoctg"
