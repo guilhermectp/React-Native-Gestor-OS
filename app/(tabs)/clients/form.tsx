@@ -204,8 +204,17 @@ export default function ClientFormPage() {
       />
 
       <PageContainer edges={["left", "right"]}>
-        {/* <ThemedView style={styles.formHeader}>
-          <ThemedView style={styles.iconContainer}>
+        {/* Header do Formulário */}
+        <ThemedView
+          style={styles.formHeader}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <ThemedView
+            style={styles.headerIconContainer}
+            lightColor="#EFF6FF"
+            darkColor="#1E3A8A"
+          >
             <MaterialCommunityIcons
               name={id ? "account-edit" : "account-plus"}
               size={32}
@@ -213,58 +222,126 @@ export default function ClientFormPage() {
             />
           </ThemedView>
 
-          <ThemedView style={styles.titleContainer}>
-            <ThemedText style={styles.formTitle}>
+          <ThemedView
+            style={styles.headerTextContainer}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedText
+              style={styles.formTitle}
+              lightColor="#111827"
+              darkColor="#F9FAFB"
+            >
               {id ? "Editar Cliente" : "Novo Cliente"}
             </ThemedText>
-            <ThemedText style={styles.formSubtitle}>
+            <ThemedText
+              style={styles.formSubtitle}
+              lightColor="#6B7280"
+              darkColor="#9CA3AF"
+            >
               Preencha os dados abaixo para {id ? "atualizar" : "cadastrar"} o
-              cliente.
+              cliente
             </ThemedText>
           </ThemedView>
-        </ThemedView> */}
+        </ThemedView>
 
         {/* Campos do Formulário */}
-        <ThemedView style={styles.formFields}>
-          <UIInput
-            label="Nome Completo"
-            placeholder="Digite o nome completo"
-            value={nome}
-            onChangeText={(text) => {
-              setNome(text);
-              if (errors.nome) setErrors((prev) => ({ ...prev, nome: "" }));
-            }}
-            error={errors.nome}
-            icon="account"
-            required
-          />
+        <ThemedView
+          style={styles.formFields}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          {/* Seção Dados Pessoais */}
+          <ThemedView
+            style={styles.sectionContainer}
+            lightColor="#FFFFFF"
+            darkColor="#1F2937"
+          >
+            <ThemedView
+              style={styles.sectionHeader}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.sectionIconBadge}
+                lightColor="#EFF6FF"
+                darkColor="#1E3A8A"
+              >
+                <MaterialCommunityIcons
+                  name="account"
+                  size={20}
+                  color="#3B82F6"
+                />
+              </ThemedView>
+              <ThemedText
+                style={styles.sectionTitle}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                Dados Pessoais
+              </ThemedText>
+            </ThemedView>
 
-          <UIInput
-            label="Telefone"
-            placeholder="(67) 99999-9999"
-            value={telefone}
-            onChangeText={(text) => {
-              if (text === telefone) return;
+            <UIInput
+              label="Nome Completo"
+              placeholder="Digite o nome completo"
+              value={nome}
+              onChangeText={(text) => {
+                setNome(text);
+                if (errors.nome) setErrors((prev) => ({ ...prev, nome: "" }));
+              }}
+              error={errors.nome}
+              icon="account"
+              required
+            />
 
-              const formattedText = formatPhone(text);
+            <UIInput
+              label="Telefone"
+              placeholder="(67) 99999-9999"
+              value={telefone}
+              onChangeText={(text) => {
+                if (text === telefone) return;
 
-              setTelefone(formattedText);
+                const formattedText = formatPhone(text);
 
-              if (errors.telefone)
-                setErrors((prev) => ({ ...prev, telefone: "" }));
-            }}
-            error={errors.telefone}
-            icon="phone"
-            keyboardType="phone-pad"
-            maxLength={15}
-            required
-          />
+                setTelefone(formattedText);
+
+                if (errors.telefone)
+                  setErrors((prev) => ({ ...prev, telefone: "" }));
+              }}
+              error={errors.telefone}
+              icon="phone"
+              keyboardType="phone-pad"
+              maxLength={15}
+              required
+            />
+          </ThemedView>
 
           {/* Seção de Endereço */}
-          <ThemedView style={styles.sectionContainer}>
-            <ThemedView style={styles.sectionHeader}>
-              <MaterialCommunityIcons name="home" size={20} color="#6B7280" />
-              <ThemedText style={styles.sectionTitle}>Endereço</ThemedText>
+          <ThemedView
+            style={styles.sectionContainer}
+            lightColor="#FFFFFF"
+            darkColor="#1F2937"
+          >
+            <ThemedView
+              style={styles.sectionHeader}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.sectionIconBadge}
+                lightColor="#D1FAE5"
+                darkColor="#064E3B"
+              >
+                <MaterialCommunityIcons name="home" size={20} color="#10B981" />
+              </ThemedView>
+              <ThemedText
+                style={styles.sectionTitle}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                Endereço
+              </ThemedText>
             </ThemedView>
 
             <UIInput
@@ -299,7 +376,7 @@ export default function ClientFormPage() {
 
             <UIInput
               label="Bairro"
-              placeholder="Digite o bairro (opcional)"
+              placeholder="Nome do bairro"
               value={bairro}
               onChangeText={setBairro}
               icon="map-marker"
@@ -307,7 +384,7 @@ export default function ClientFormPage() {
 
             <UIInput
               label="Complemento"
-              placeholder="Apartamento, bloco, etc. (opcional)"
+              placeholder="Apartamento, bloco, etc."
               value={complemento}
               onChangeText={setComplemento}
               icon="information"
@@ -316,21 +393,35 @@ export default function ClientFormPage() {
         </ThemedView>
 
         {/* Botões de Ação */}
-        <ThemedView style={styles.buttonContainer}>
+        <ThemedView
+          style={styles.buttonContainer}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
           <Pressable
-            style={[styles.button, styles.cancelButton]}
+            style={({ pressed }) => [
+              styles.button,
+              styles.cancelButton,
+              pressed && styles.cancelButtonPressed,
+            ]}
             onPress={() => router.back()}
             disabled={loading}
           >
-            <MaterialCommunityIcons name="close" size={20} color="#6B7280" />
-            <ThemedText style={styles.cancelButtonText}>Cancelar</ThemedText>
+            <ThemedText
+              style={styles.cancelButtonText}
+              lightColor="#6B7280"
+              darkColor="#9CA3AF"
+            >
+              Cancelar
+            </ThemedText>
           </Pressable>
 
           <Pressable
-            style={[
+            style={({ pressed }) => [
               styles.button,
               styles.saveButton,
               loading && styles.buttonDisabled,
+              pressed && !loading && styles.saveButtonPressed,
             ]}
             onPress={handleSave}
             disabled={loading}
@@ -338,15 +429,10 @@ export default function ClientFormPage() {
             {loading ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <MaterialCommunityIcons
-                name={id ? "content-save" : "plus"}
-                size={20}
-                color="white"
-              />
+              <ThemedText style={styles.saveButtonText}>
+                {id ? "Atualizar" : "Cadastrar"}
+              </ThemedText>
             )}
-            <ThemedText style={styles.saveButtonText}>
-              {loading ? "Salvando..." : id ? "Atualizar" : "Cadastrar"}
-            </ThemedText>
           </Pressable>
         </ThemedView>
       </PageContainer>
@@ -355,89 +441,99 @@ export default function ClientFormPage() {
 }
 
 const styles = StyleSheet.create({
-  // Header Styles
-  // formHeader: {
-  //   flexDirection: "row",
-  //   gap: 16,
-  //   alignItems: "center",
-  //   marginBottom: 32,
-  //   // width: "100%",
-  // },
-  // iconContainer: {
-  //   backgroundColor: "#EBF4FF",
-  //   padding: 16,
-  //   borderRadius: 50,
-  // },
-  // titleContainer: {
-  //   flex: 1,
-  //   gap: 4,
-  // },
-  // formTitle: {
-  //   fontSize: 22,
-  //   fontWeight: "bold",
-  //   color: "#1F2937",
-  //   flexWrap: "wrap",
-  // },
-  // formSubtitle: {
-  //   fontSize: 16,
-  //   color: "#6B7280",
-  //   flexWrap: "wrap",
-  // },
+  // Header do Formulário
+  formHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    marginBottom: 24,
+  },
+  headerIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTextContainer: {
+    flex: 1,
+    gap: 4,
+  },
+  formTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  formSubtitle: {
+    fontSize: 15,
+  },
 
   // Form Fields
   formFields: {
-    gap: 16,
+    gap: 20,
   },
 
-  // Section Styles
   sectionContainer: {
-    paddingTop: 12,
+    padding: 20,
     borderRadius: 12,
     gap: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: "#3B82F6",
   },
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 12,
+    marginBottom: 4,
+  },
+  sectionIconBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#374151",
+    fontWeight: "bold",
   },
 
-  // Button Styles
+  // Botões
   buttonContainer: {
     flexDirection: "row",
     gap: 12,
     marginTop: 32,
+    marginBottom: 16,
   },
   button: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding: 12,
-    borderRadius: 12,
-    gap: 8,
-    elevation: 1,
+    padding: 14,
+    borderRadius: 8,
   },
   cancelButton: {
-    backgroundColor: "white",
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "#D1D5DB",
+  },
+  cancelButtonPressed: {
+    opacity: 0.7,
+    backgroundColor: "#F9FAFB",
   },
   cancelButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#6B7280",
   },
   saveButton: {
-    backgroundColor: "#1E40AF",
+    backgroundColor: "#3B82F6",
+  },
+  saveButtonPressed: {
+    opacity: 0.9,
   },
   saveButtonText: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "bold",
     color: "white",
   },
   buttonDisabled: {

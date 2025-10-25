@@ -1,7 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, TextInput, useColorScheme } from "react-native";
 import { ThemedText } from "../themed-text";
+import { ThemedView } from "../themed-view";
 
 interface UIInputProps {
   label: string;
@@ -30,14 +31,30 @@ const UIInput: React.FC<UIInputProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
 
   return (
-    <View style={styles.fieldContainer}>
+    <ThemedView
+      style={styles.fieldContainer}
+      lightColor="transparent"
+      darkColor="transparent"
+    >
       {label && (
-        <ThemedText style={styles.fieldLabel}>
-          {label}{" "}
-          {required && <ThemedText style={styles.required}>*</ThemedText>}
-        </ThemedText>
+        <ThemedView
+          style={styles.labelContainer}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#111827"
+            darkColor="#F9FAFB"
+          >
+            {label}
+          </ThemedText>
+          {required && <ThemedText style={styles.requiredText}>*</ThemedText>}
+        </ThemedView>
       )}
 
       <Pressable
@@ -46,90 +63,150 @@ const UIInput: React.FC<UIInputProps> = ({
         style={[
           styles.inputContainer,
           error && styles.inputError,
-          isHovered && styles.inputHover,
+          isHovered && !isFocused && styles.inputHover,
           isFocused && styles.inputFocus,
+          !editable && styles.inputDisabled,
         ]}
       >
-        <MaterialCommunityIcons
-          name={icon as any}
-          size={20}
-          color={error ? "#EF4444" : isFocused ? "#3B82F6" : "#6B7280"}
-          style={styles.inputIcon}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder={placeholder}
-          value={value}
-          onChangeText={onChangeText}
-          keyboardType={keyboardType}
-          maxLength={maxLength}
-          placeholderTextColor="#9CA3AF"
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          editable={editable}
-        />
+        <ThemedView
+          style={styles.inputWrapper}
+          lightColor={error ? "#FEF2F2" : "#FFFFFF"}
+          darkColor={error ? "#7F1D1D" : "#1F2937"}
+        >
+          <MaterialCommunityIcons
+            name={icon as any}
+            size={20}
+            color={error ? "#EF4444" : isFocused ? "#3B82F6" : "#6B7280"}
+            style={styles.inputIcon}
+          />
+
+          <TextInput
+            style={[
+              styles.input,
+              { color: isDark ? "#F9FAFB" : "#1F2937" },
+              !editable && styles.inputTextDisabled,
+            ]}
+            placeholder={placeholder}
+            value={value}
+            onChangeText={onChangeText}
+            keyboardType={keyboardType}
+            maxLength={maxLength}
+            placeholderTextColor="#9CA3AF"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            editable={editable}
+          />
+
+          {value.length > 0 && maxLength && (
+            <ThemedText
+              style={styles.charCounter}
+              lightColor="#9CA3AF"
+              darkColor="#6B7280"
+            >
+              {value.length}/{maxLength}
+            </ThemedText>
+          )}
+        </ThemedView>
       </Pressable>
-      {error && <ThemedText style={styles.errorText}>{error}</ThemedText>}
-    </View>
+
+      {error && (
+        <ThemedView
+          style={styles.errorContainer}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <MaterialCommunityIcons
+            name="alert-circle"
+            size={16}
+            color="#EF4444"
+            style={styles.errorIcon}
+          />
+          <ThemedText
+            style={styles.errorText}
+            lightColor="#EF4444"
+            darkColor="#FCA5A5"
+          >
+            {error}
+          </ThemedText>
+        </ThemedView>
+      )}
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   fieldContainer: {
     flex: 1,
+    gap: 8,
+  },
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     gap: 2,
   },
-  fieldLabel: {
-    fontSize: 16,
+  requiredText: {
+    fontSize: 20,
     fontWeight: "600",
-    color: "#374151",
-  },
-  required: {
     color: "#EF4444",
   },
   inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F9FAFB",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#D1D5DB",
     height: 50,
-    position: "relative",
   },
   inputError: {
     borderColor: "#EF4444",
-    backgroundColor: "#FEF2F2",
   },
   inputHover: {
-    borderColor: "#9CA3AF",
-    backgroundColor: "#F3F4F6",
+    borderColor: "#E5E7EB",
   },
   inputFocus: {
     borderColor: "#3B82F6",
   },
+  inputDisabled: {
+    opacity: 0.6,
+    borderColor: "#D1D5DB",
+  },
+  inputWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 7,
+    paddingHorizontal: 16,
+  },
   inputIcon: {
-    position: "absolute",
-    left: 16,
-    zIndex: 1,
-    top: "50%",
-    marginTop: -10,
+    marginRight: 8,
   },
   input: {
     flex: 1,
     height: "100%",
     fontSize: 16,
-    color: "#1F2937",
+    fontWeight: "500",
     paddingVertical: 0,
-    paddingLeft: 48,
-    paddingRight: 16,
     includeFontPadding: false,
     textAlignVertical: "center",
   },
+  inputTextDisabled: {
+    opacity: 0.6,
+  },
+  charCounter: {
+    fontSize: 12,
+    fontWeight: "600",
+    marginLeft: 8,
+  },
+  errorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 4,
+  },
+  errorIcon: {
+    marginTop: 1,
+  },
   errorText: {
-    fontSize: 14,
-    paddingLeft: 8,
-    color: "#EF4444",
+    fontSize: 13,
+    fontWeight: "500",
   },
 });
 

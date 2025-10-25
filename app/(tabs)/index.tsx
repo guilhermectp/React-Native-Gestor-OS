@@ -57,9 +57,17 @@ export default function Home() {
 
   if (loading) {
     return (
-      <ThemedView style={styles.loadingContainer}>
+      <ThemedView
+        style={styles.loadingContainer}
+        lightColor="#F9FAFB"
+        darkColor="#111827"
+      >
         <ActivityIndicator size="large" color="#3B82F6" />
-        <ThemedText style={styles.loadingText}>
+        <ThemedText
+          type="defaultSemiBold"
+          lightColor="#6B7280"
+          darkColor="#9CA3AF"
+        >
           Carregando estatísticas...
         </ThemedText>
       </ThemedView>
@@ -68,107 +76,419 @@ export default function Home() {
 
   return (
     <PageContainer>
-      <ThemedView style={styles.header}>
-        <ThemedText style={styles.headerTitle}>Dashboard</ThemedText>
-        <ThemedText style={styles.headerSubtitle}>
+      <ThemedView
+        style={styles.header}
+        lightColor="transparent"
+        darkColor="transparent"
+      >
+        <ThemedText type="title" lightColor="#111827" darkColor="#F9FAFB">
+          Dashboard
+        </ThemedText>
+        <ThemedText
+          type="defaultSemiBold"
+          lightColor="#6B7280"
+          darkColor="#9CA3AF"
+        >
           Visão geral das ordens de serviço
         </ThemedText>
       </ThemedView>
 
-      {/* Card Total */}
-      <ThemedView style={[styles.mainCard, styles.totalCard]}>
-        <ThemedView style={styles.cardIconContainer}>
+      {/* Card Total com gradiente visual */}
+      <ThemedView
+        style={styles.mainCard}
+        lightColor="#FFFFFF"
+        darkColor="#1F2937"
+      >
+        <ThemedView
+          style={styles.cardIconContainer}
+          lightColor="#EFF6FF"
+          darkColor="#1E3A8A"
+        >
           <MaterialCommunityIcons
             name="file-document-multiple"
-            size={32}
+            size={36}
             color="#3B82F6"
           />
         </ThemedView>
-        <ThemedView style={styles.cardContent}>
-          <ThemedText style={styles.cardLabel}>Total de Ordens</ThemedText>
-          <ThemedText style={styles.mainCardValue}>{stats.total}</ThemedText>
+        <ThemedView
+          style={styles.cardContent}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#6B7280"
+            darkColor="#9CA3AF"
+          >
+            Total de Ordens
+          </ThemedText>
+          <ThemedText
+            style={styles.mainCardValue}
+            lightColor="#3B82F6"
+            darkColor="#60A5FA"
+          >
+            {stats.total}
+          </ThemedText>
+          <ThemedText
+            style={styles.mainCardSubtext}
+            lightColor="#9CA3AF"
+            darkColor="#6B7280"
+          >
+            Todas as ordens registradas
+          </ThemedText>
         </ThemedView>
       </ThemedView>
 
-      {/* Cards de Status */}
-      <ThemedView style={styles.statsGrid}>
-        <ThemedView style={[styles.statCard, styles.pendingCard]}>
-          <ThemedView style={styles.statCardHeader}>
-            <MaterialCommunityIcons
-              name="clock-outline"
-              size={24}
-              color="#F59E0B"
-            />
-            <ThemedText style={[styles.statValue, { color: "#F59E0B" }]}>
+      {/* Cards de Status com design melhorado */}
+      <ThemedView
+        style={styles.statsGrid}
+        lightColor="transparent"
+        darkColor="transparent"
+      >
+        <ThemedView
+          style={[styles.statCard, styles.pendingCard]}
+          lightColor="#FFFFFF"
+          darkColor="#1F2937"
+        >
+          <ThemedView
+            style={styles.statCardHeader}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={[styles.iconBadge, styles.pendingBadge]}
+              lightColor="#FEF3C7"
+              darkColor="#78350F"
+            >
+              <MaterialCommunityIcons
+                name="clock-outline"
+                size={24}
+                color="#F59E0B"
+              />
+            </ThemedView>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.statValue, { color: "#F59E0B" }]}
+            >
               {stats.pendente}
             </ThemedText>
           </ThemedView>
-          <ThemedText style={styles.statLabel}>Pendentes</ThemedText>
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#1F2937"
+            darkColor="#F9FAFB"
+            style={styles.statLabel}
+          >
+            Pendentes
+          </ThemedText>
+          <ThemedView
+            style={styles.statProgress}
+            lightColor="#FEF3C7"
+            darkColor="#78350F"
+          >
+            <ThemedView
+              style={[
+                styles.statProgressBar,
+                {
+                  width: `${
+                    stats.total > 0 ? (stats.pendente / stats.total) * 100 : 0
+                  }%`,
+                  backgroundColor: "#F59E0B",
+                },
+              ]}
+            />
+          </ThemedView>
         </ThemedView>
 
-        <ThemedView style={[styles.statCard, styles.inProgressCard]}>
-          <ThemedView style={styles.statCardHeader}>
-            <MaterialCommunityIcons name="wrench" size={24} color="#3B82F6" />
-            <ThemedText style={[styles.statValue, { color: "#3B82F6" }]}>
+        <ThemedView
+          style={[styles.statCard, styles.inProgressCard]}
+          lightColor="#FFFFFF"
+          darkColor="#1F2937"
+        >
+          <ThemedView
+            style={styles.statCardHeader}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={[styles.iconBadge, styles.inProgressBadge]}
+              lightColor="#DBEAFE"
+              darkColor="#1E3A8A"
+            >
+              <MaterialCommunityIcons name="wrench" size={24} color="#3B82F6" />
+            </ThemedView>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.statValue, { color: "#3B82F6" }]}
+            >
               {stats.em_andamento}
             </ThemedText>
           </ThemedView>
-          <ThemedText style={styles.statLabel}>Em Andamento</ThemedText>
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#1F2937"
+            darkColor="#F9FAFB"
+            style={styles.statLabel}
+          >
+            Em Andamento
+          </ThemedText>
+          <ThemedView
+            style={styles.statProgress}
+            lightColor="#DBEAFE"
+            darkColor="#1E3A8A"
+          >
+            <ThemedView
+              style={[
+                styles.statProgressBar,
+                {
+                  width: `${
+                    stats.total > 0
+                      ? (stats.em_andamento / stats.total) * 100
+                      : 0
+                  }%`,
+                  backgroundColor: "#3B82F6",
+                },
+              ]}
+            />
+          </ThemedView>
         </ThemedView>
 
-        <ThemedView style={[styles.statCard, styles.completedCard]}>
-          <ThemedView style={styles.statCardHeader}>
-            <MaterialCommunityIcons
-              name="check-circle"
-              size={24}
-              color="#10B981"
-            />
-            <ThemedText style={[styles.statValue, { color: "#10B981" }]}>
+        <ThemedView
+          style={[styles.statCard, styles.completedCard]}
+          lightColor="#FFFFFF"
+          darkColor="#1F2937"
+        >
+          <ThemedView
+            style={styles.statCardHeader}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={[styles.iconBadge, styles.completedBadge]}
+              lightColor="#D1FAE5"
+              darkColor="#064E3B"
+            >
+              <MaterialCommunityIcons
+                name="check-circle"
+                size={24}
+                color="#10B981"
+              />
+            </ThemedView>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.statValue, { color: "#10B981" }]}
+            >
               {stats.concluido}
             </ThemedText>
           </ThemedView>
-          <ThemedText style={styles.statLabel}>Concluídas</ThemedText>
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#1F2937"
+            darkColor="#F9FAFB"
+            style={styles.statLabel}
+          >
+            Concluídas
+          </ThemedText>
+          <ThemedView
+            style={styles.statProgress}
+            lightColor="#D1FAE5"
+            darkColor="#064E3B"
+          >
+            <ThemedView
+              style={[
+                styles.statProgressBar,
+                {
+                  width: `${
+                    stats.total > 0 ? (stats.concluido / stats.total) * 100 : 0
+                  }%`,
+                  backgroundColor: "#10B981",
+                },
+              ]}
+            />
+          </ThemedView>
         </ThemedView>
 
-        <ThemedView style={[styles.statCard, styles.cancelledCard]}>
-          <ThemedView style={styles.statCardHeader}>
-            <MaterialCommunityIcons
-              name="close-circle"
-              size={24}
-              color="#EF4444"
-            />
-            <ThemedText style={[styles.statValue, { color: "#EF4444" }]}>
+        <ThemedView
+          style={[styles.statCard, styles.cancelledCard]}
+          lightColor="#FFFFFF"
+          darkColor="#1F2937"
+        >
+          <ThemedView
+            style={styles.statCardHeader}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={[styles.iconBadge, styles.cancelledBadge]}
+              lightColor="#FEE2E2"
+              darkColor="#7F1D1D"
+            >
+              <MaterialCommunityIcons
+                name="close-circle"
+                size={24}
+                color="#EF4444"
+              />
+            </ThemedView>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.statValue, { color: "#EF4444" }]}
+            >
               {stats.cancelado}
             </ThemedText>
           </ThemedView>
-          <ThemedText style={styles.statLabel}>Canceladas</ThemedText>
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#1F2937"
+            darkColor="#F9FAFB"
+            style={styles.statLabel}
+          >
+            Canceladas
+          </ThemedText>
+          <ThemedView
+            style={styles.statProgress}
+            lightColor="#FEE2E2"
+            darkColor="#7F1D1D"
+          >
+            <ThemedView
+              style={[
+                styles.statProgressBar,
+                {
+                  width: `${
+                    stats.total > 0 ? (stats.cancelado / stats.total) * 100 : 0
+                  }%`,
+                  backgroundColor: "#EF4444",
+                },
+              ]}
+            />
+          </ThemedView>
         </ThemedView>
       </ThemedView>
 
-      {/* Resumo */}
-      <ThemedView style={styles.summaryCard}>
-        <ThemedText style={styles.summaryTitle}>Resumo</ThemedText>
-        <ThemedView style={styles.summaryRow}>
-          <ThemedText style={styles.summaryLabel}>Em aberto:</ThemedText>
-          <ThemedText style={styles.summaryValue}>
-            {stats.pendente + stats.em_andamento}
+      {/* Resumo com design melhorado */}
+      <ThemedView
+        style={styles.summaryCard}
+        lightColor="#FFFFFF"
+        darkColor="#1F2937"
+      >
+        <ThemedView
+          style={styles.summaryHeader}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <MaterialCommunityIcons name="chart-box" size={24} color="#3B82F6" />
+          <ThemedText
+            style={styles.summaryTitle}
+            lightColor="#111827"
+            darkColor="#F9FAFB"
+          >
+            Resumo Geral
           </ThemedText>
         </ThemedView>
-        <ThemedView style={styles.summaryRow}>
-          <ThemedText style={styles.summaryLabel}>Finalizadas:</ThemedText>
-          <ThemedText style={styles.summaryValue}>
-            {stats.concluido + stats.cancelado}
-          </ThemedText>
-        </ThemedView>
-        <ThemedView style={[styles.summaryRow, styles.summaryRowBorder]}>
-          <ThemedText style={styles.summaryLabelBold}>
-            Taxa de conclusão:
-          </ThemedText>
-          <ThemedText style={styles.summaryValueBold}>
-            {stats.total > 0
-              ? `${((stats.concluido / stats.total) * 100).toFixed(1)}%`
-              : "0%"}
-          </ThemedText>
+
+        <ThemedView
+          style={styles.summaryContent}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <ThemedView
+            style={styles.summaryRow}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={styles.summaryRowLeft}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <MaterialCommunityIcons
+                name="folder-open"
+                size={20}
+                color="#6B7280"
+              />
+              <ThemedText
+                style={styles.summaryLabel}
+                lightColor="#6B7280"
+                darkColor="#9CA3AF"
+              >
+                Em aberto
+              </ThemedText>
+            </ThemedView>
+            <ThemedText
+              style={styles.summaryValue}
+              lightColor="#1F2937"
+              darkColor="#F9FAFB"
+            >
+              {stats.pendente + stats.em_andamento}
+            </ThemedText>
+          </ThemedView>
+
+          <ThemedView
+            style={styles.summaryRow}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={styles.summaryRowLeft}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <MaterialCommunityIcons
+                name="folder-check"
+                size={20}
+                color="#6B7280"
+              />
+              <ThemedText
+                style={styles.summaryLabel}
+                lightColor="#6B7280"
+                darkColor="#9CA3AF"
+              >
+                Finalizadas
+              </ThemedText>
+            </ThemedView>
+            <ThemedText
+              style={styles.summaryValue}
+              lightColor="#1F2937"
+              darkColor="#F9FAFB"
+            >
+              {stats.concluido + stats.cancelado}
+            </ThemedText>
+          </ThemedView>
+
+          <ThemedView
+            style={styles.summaryDivider}
+            lightColor="#E5E7EB"
+            darkColor="#374151"
+          />
+
+          <ThemedView
+            style={styles.summaryRow}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={styles.summaryRowLeft}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <MaterialCommunityIcons
+                name="chart-line"
+                size={20}
+                color="#3B82F6"
+              />
+              <ThemedText
+                style={styles.summaryLabelBold}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                Taxa de conclusão
+              </ThemedText>
+            </ThemedView>
+            <ThemedText style={styles.summaryValueBold}>
+              {stats.total > 0
+                ? `${((stats.concluido / stats.total) * 100).toFixed(1)}%`
+                : "0%"}
+            </ThemedText>
+          </ThemedView>
         </ThemedView>
       </ThemedView>
     </PageContainer>
@@ -182,133 +502,139 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  loadingText: {
-    fontSize: 16,
-    color: "#6B7280",
-  },
 
   header: {
     marginBottom: 24,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#1F2937",
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: "#6B7280",
+    gap: 4,
   },
 
   // Main Card
   mainCard: {
-    backgroundColor: "white",
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 24,
-    marginBottom: 16,
+    marginBottom: 20,
     flexDirection: "row",
     alignItems: "center",
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-  },
-  totalCard: {
-    borderLeftWidth: 4,
+    elevation: 4,
+    shadowColor: "#3B82F6",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    borderLeftWidth: 5,
     borderLeftColor: "#3B82F6",
   },
   cardIconContainer: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: "#EFF6FF",
+    width: 72,
+    height: 72,
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 16,
+    marginRight: 20,
   },
   cardContent: {
     flex: 1,
-  },
-  cardLabel: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginBottom: 4,
+    gap: 4,
   },
   mainCardValue: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: "bold",
-    color: "#1F2937",
+    letterSpacing: -1,
+  },
+  mainCardSubtext: {
+    fontSize: 13,
   },
 
   // Stats Grid
   statsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 12,
-    marginBottom: 16,
+    gap: 16,
+    marginBottom: 20,
   },
   statCard: {
     flex: 1,
     minWidth: "47%",
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 16,
-    elevation: 2,
+    borderRadius: 16,
+    padding: 20,
+    elevation: 3,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
   },
   pendingCard: {
-    borderLeftWidth: 3,
+    borderLeftWidth: 4,
     borderLeftColor: "#F59E0B",
   },
   inProgressCard: {
-    borderLeftWidth: 3,
+    borderLeftWidth: 4,
     borderLeftColor: "#3B82F6",
   },
   completedCard: {
-    borderLeftWidth: 3,
+    borderLeftWidth: 4,
     borderLeftColor: "#10B981",
   },
   cancelledCard: {
-    borderLeftWidth: 3,
+    borderLeftWidth: 4,
     borderLeftColor: "#EF4444",
   },
   statCardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: 12,
   },
+  iconBadge: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  pendingBadge: {},
+  inProgressBadge: {},
+  completedBadge: {},
+  cancelledBadge: {},
   statValue: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "bold",
   },
   statLabel: {
-    fontSize: 14,
-    color: "#6B7280",
-    fontWeight: "500",
+    fontSize: 15,
+    marginBottom: 8,
+  },
+  statProgress: {
+    height: 6,
+    borderRadius: 3,
+    overflow: "hidden",
+  },
+  statProgressBar: {
+    height: "100%",
+    borderRadius: 3,
   },
 
   // Summary Card
   summaryCard: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 20,
-    elevation: 2,
+    borderRadius: 16,
+    padding: 24,
+    elevation: 3,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+  },
+  summaryHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 20,
   },
   summaryTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    color: "#1F2937",
-    marginBottom: 16,
+  },
+  summaryContent: {
+    gap: 12,
   },
   summaryRow: {
     flexDirection: "row",
@@ -316,28 +642,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 8,
   },
-  summaryRowBorder: {
-    borderTopWidth: 2,
-    borderTopColor: "#E5E7EB",
-    marginTop: 8,
-    paddingTop: 16,
+  summaryRowLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  summaryDivider: {
+    height: 2,
+    marginVertical: 8,
+    borderRadius: 1,
   },
   summaryLabel: {
-    fontSize: 14,
-    color: "#6B7280",
+    fontSize: 15,
   },
   summaryValue: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
-    color: "#1F2937",
   },
   summaryLabelBold: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#1F2937",
   },
   summaryValueBold: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#3B82F6",
   },

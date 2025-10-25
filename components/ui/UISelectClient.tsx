@@ -3,8 +3,9 @@ import useClientDatabase, {
 } from "@/database/useClientDatabase";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { ThemedText } from "../themed-text";
+import { ThemedView } from "../themed-view";
 import UISelectClientModal from "./UISelectClientModal";
 
 interface UIInputProps {
@@ -25,6 +26,8 @@ const UISelectClient: React.FC<UIInputProps> = ({
   clientId,
 }) => {
   const clientDatabase = useClientDatabase();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
 
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -66,12 +69,26 @@ const UISelectClient: React.FC<UIInputProps> = ({
   }, [clientId]);
 
   return (
-    <View style={styles.fieldContainer}>
+    <ThemedView
+      style={styles.fieldContainer}
+      lightColor="transparent"
+      darkColor="transparent"
+    >
       {label && (
-        <ThemedText style={styles.fieldLabel}>
-          {label}{" "}
-          {required && <ThemedText style={styles.required}>*</ThemedText>}
-        </ThemedText>
+        <ThemedView
+          style={styles.labelContainer}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#111827"
+            darkColor="#F9FAFB"
+          >
+            {label}
+          </ThemedText>
+          {required && <ThemedText style={styles.requiredText}>*</ThemedText>}
+        </ThemedView>
       )}
 
       <Pressable
@@ -84,101 +101,126 @@ const UISelectClient: React.FC<UIInputProps> = ({
         style={[
           styles.inputContainer,
           error && styles.inputError,
-          isHovered && styles.inputHover,
+          isHovered && !isFocused && styles.inputHover,
           isFocused && styles.inputFocus,
+          disabled && styles.inputDisabled,
         ]}
       >
-        <MaterialCommunityIcons
-          name="account"
-          size={20}
-          color={error ? "#EF4444" : isFocused ? "#3B82F6" : "#6B7280"}
-          style={styles.inputIconLeft}
-        />
-
-        <ThemedText
-          style={[
-            styles.clientSelectorText,
-            !clientNome && styles.clientSelectorPlaceholder,
-          ]}
+        <ThemedView
+          style={styles.inputWrapper}
+          lightColor={error ? "#FEF2F2" : "#FFFFFF"}
+          darkColor={error ? "#7F1D1D" : "#1F2937"}
         >
-          {clientNome || "Selecione um cliente"}
-        </ThemedText>
+          <MaterialCommunityIcons
+            name="account"
+            size={20}
+            color={error ? "#EF4444" : isFocused ? "#3B82F6" : "#6B7280"}
+            style={styles.inputIconLeft}
+          />
 
-        <MaterialCommunityIcons
-          name="chevron-right"
-          size={20}
-          color={error ? "#EF4444" : isFocused ? "#3B82F6" : "#6B7280"}
-          style={styles.inputIconRight}
-        />
+          <ThemedText
+            style={[
+              styles.clientSelectorText,
+              { color: isDark ? "#F9FAFB" : "#1F2937" },
+              !clientNome && styles.clientSelectorPlaceholder,
+            ]}
+          >
+            {clientNome || "Selecione um cliente"}
+          </ThemedText>
+
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={20}
+            color={error ? "#EF4444" : isFocused ? "#3B82F6" : "#6B7280"}
+            style={styles.inputIconRight}
+          />
+        </ThemedView>
       </Pressable>
-      {error && <ThemedText style={styles.errorText}>{error}</ThemedText>}
+
+      {error && (
+        <ThemedView
+          style={styles.errorContainer}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <MaterialCommunityIcons
+            name="alert-circle"
+            size={16}
+            color="#EF4444"
+            style={styles.errorIcon}
+          />
+          <ThemedText
+            style={styles.errorText}
+            lightColor="#EF4444"
+            darkColor="#FCA5A5"
+          >
+            {error}
+          </ThemedText>
+        </ThemedView>
+      )}
 
       <UISelectClientModal
         visible={showClientModal}
         onClose={() => setShowClientModal(false)}
         onSelectClient={handleSelectClient}
       />
-    </View>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   fieldContainer: {
     flex: 1,
+    gap: 8,
+  },
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     gap: 2,
   },
-  fieldLabel: {
-    fontSize: 16,
+  requiredText: {
+    fontSize: 20,
     fontWeight: "600",
-    color: "#374151",
-  },
-  required: {
     color: "#EF4444",
   },
 
   inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F9FAFB",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#D1D5DB",
     height: 50,
-    position: "relative",
   },
   inputError: {
     borderColor: "#EF4444",
-    backgroundColor: "#FEF2F2",
   },
   inputHover: {
-    borderColor: "#9CA3AF",
-    backgroundColor: "#F3F4F6",
+    borderColor: "#E5E7EB",
   },
   inputFocus: {
     borderColor: "#3B82F6",
   },
+  inputDisabled: {
+    opacity: 0.6,
+  },
+  inputWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 7,
+    paddingHorizontal: 16,
+  },
   inputIconLeft: {
-    position: "absolute",
-    left: 16,
-    zIndex: 1,
-    top: "50%",
-    marginTop: -10,
+    marginRight: 8,
   },
   inputIconRight: {
-    position: "absolute",
-    right: 16,
-    zIndex: 1,
-    top: "50%",
-    marginTop: -10,
+    marginLeft: 8,
   },
 
   clientSelectorText: {
     flex: 1,
     fontSize: 16,
-    color: "#1F2937",
+    fontWeight: "500",
     paddingVertical: 0,
-    paddingLeft: 48,
-    paddingRight: 48,
     includeFontPadding: false,
     textAlignVertical: "center",
   },
@@ -186,10 +228,18 @@ const styles = StyleSheet.create({
     color: "#9CA3AF",
   },
 
+  errorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 4,
+  },
+  errorIcon: {
+    marginTop: 1,
+  },
   errorText: {
-    fontSize: 14,
-    paddingLeft: 8,
-    color: "#EF4444",
+    fontSize: 13,
+    fontWeight: "500",
   },
 });
 

@@ -5,7 +5,7 @@ export default function OrderClientsLayout() {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#1E40AF",
+          backgroundColor: "#3B82F6",
         },
         headerTintColor: "#fff",
         headerTitleStyle: {

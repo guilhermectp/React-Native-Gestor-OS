@@ -76,12 +76,12 @@ export default function ServiceFormPage() {
   // Serviços - mantém como STRING no formulário para facilitar input
   const [servicosRealizados, setServicosRealizados] = useState("");
   const [valorServicos, setValorServicos] = useState("");
-  const [desconto, setDesconto] = useState("");
+  const [desconto, setDesconto] = useState("0.00");
   const [valorTotal, setValorTotal] = useState("");
 
   // Outros
   const [observacoes, setObservacoes] = useState("");
-  const [garantiaDias, setGarantiaDias] = useState("");
+  const [garantiaDias, setGarantiaDias] = useState("90");
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -165,6 +165,10 @@ export default function ServiceFormPage() {
       newErrors.valorServicos = "Valor do serviço é obrigatório";
     }
 
+    if (!servicosRealizados.trim()) {
+      newErrors.servicosRealizados = "Descreva os serviços realizados";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -180,16 +184,16 @@ export default function ServiceFormPage() {
         client_id: clientId,
         numero_os: numeroOs,
         data_servico: isoDate,
-        equipamento_tipo: equipamentoTipo,
-        equipamento_marca: equipamentoMarca,
-        equipamento_modelo: equipamentoModelo,
-        equipamento_serie: equipamentoSerie,
+        equipamento_tipo: equipamentoTipo || "",
+        equipamento_marca: equipamentoMarca || "",
+        equipamento_modelo: equipamentoModelo || "",
+        equipamento_serie: equipamentoSerie || "",
         servicos_realizados: servicosRealizados,
-        valor_servicos: parseFloat(valorServicos || ""),
-        desconto: parseFloat(desconto || ""),
-        valor_total: parseFloat(valorTotal || ""),
-        observacoes: observacoes,
-        garantia_dias: parseInt(garantiaDias || ""),
+        valor_servicos: parseFloat(valorServicos || "0"),
+        desconto: parseFloat(desconto || "0"),
+        valor_total: parseFloat(valorTotal || "0"),
+        observacoes: observacoes || "",
+        garantia_dias: parseInt(garantiaDias || "0"),
         status: "pendente",
       });
 
@@ -201,10 +205,10 @@ export default function ServiceFormPage() {
       clearForm();
       router.back();
     } catch (error) {
-      console.log(error);
+      console.log("Erro ao criar OS:", error);
       Alert.alert(
         "Erro ❌",
-        "Não foi possível cadastrar a ordem de serviço. Tente novamente."
+        `Não foi possível cadastrar a ordem de serviço. Detalhes: ${error}`
       );
     } finally {
       setLoading(false);
@@ -221,16 +225,16 @@ export default function ServiceFormPage() {
       await serviceOrderDatabase.update({
         id: id,
         data_servico: isoDate,
-        equipamento_tipo: equipamentoTipo,
-        equipamento_marca: equipamentoMarca,
-        equipamento_modelo: equipamentoModelo,
-        equipamento_serie: equipamentoSerie,
+        equipamento_tipo: equipamentoTipo || "",
+        equipamento_marca: equipamentoMarca || "",
+        equipamento_modelo: equipamentoModelo || "",
+        equipamento_serie: equipamentoSerie || "",
         servicos_realizados: servicosRealizados,
-        valor_servicos: parseFloat(valorServicos || ""),
-        desconto: parseFloat(desconto || ""),
-        valor_total: parseFloat(valorTotal || ""),
-        observacoes: observacoes,
-        garantia_dias: parseInt(garantiaDias || ""),
+        valor_servicos: parseFloat(valorServicos || "0"),
+        desconto: parseFloat(desconto || "0"),
+        valor_total: parseFloat(valorTotal || "0"),
+        observacoes: observacoes || "",
+        garantia_dias: parseInt(garantiaDias || "0"),
       });
 
       Alert.alert(
@@ -241,7 +245,7 @@ export default function ServiceFormPage() {
       clearForm();
       router.back();
     } catch (error) {
-      console.log(error);
+      console.log("Erro ao atualizar OS:", error);
       Alert.alert(
         "Erro ❌",
         "Não foi possível atualizar a ordem de serviço. Tente novamente."
@@ -252,7 +256,13 @@ export default function ServiceFormPage() {
   }
 
   async function handleSave() {
-    if (!validateFields()) return;
+    if (!validateFields()) {
+      Alert.alert(
+        "Atenção",
+        "Por favor, corrija os erros no formulário antes de continuar."
+      );
+      return;
+    }
 
     if (id) {
       await update();
@@ -272,10 +282,10 @@ export default function ServiceFormPage() {
     setEquipamentoSerie("");
     setServicosRealizados("");
     setValorServicos("");
-    setDesconto("");
+    setDesconto("0.00");
     setValorTotal("");
     setObservacoes("");
-    setGarantiaDias("");
+    setGarantiaDias("90");
     setErrors({});
   }
 
@@ -284,63 +294,128 @@ export default function ServiceFormPage() {
       <Stack.Screen
         options={{
           headerTitle: isEditing
-            ? "Editar  Ordem de Serviço"
+            ? "Editar Ordem de Serviço"
             : "Nova Ordem de Serviço",
         }}
       />
 
       <PageContainer edges={["left", "right"]}>
-        {/* <View style={styles.formHeader}>
-              <View style={styles.iconContainer}>
-                <MaterialCommunityIcons
-                  name={id ? "file-document-edit" : "file-document-plus"}
-                  size={32}
-                  color="#3B82F6"
-                />
-              </View>
+        {/* Header do Formulário */}
+        <ThemedView
+          style={styles.formHeader}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <ThemedView
+            style={styles.headerIconContainer}
+            lightColor="#EFF6FF"
+            darkColor="#1E3A8A"
+          >
+            <MaterialCommunityIcons
+              name={id ? "file-document-edit" : "file-document-plus"}
+              size={32}
+              color="#3B82F6"
+            />
+          </ThemedView>
 
-              <View style={styles.titleContainer}>
-                <Text style={styles.formTitle}>
-                  {id ? "Editar Ordem de Serviço" : "Nova Ordem de Serviço"}
-                </Text>
-                <Text style={styles.formSubtitle}>
-                  Preencha os dados abaixo para {id ? "atualizar" : "cadastrar"}{" "}
-                  a OS.
-                </Text>
-              </View>
-            </View> */}
+          <ThemedView
+            style={styles.headerTextContainer}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedText
+              style={styles.formTitle}
+              lightColor="#111827"
+              darkColor="#F9FAFB"
+            >
+              {id ? "Editar Ordem de Serviço" : "Nova Ordem de Serviço"}
+            </ThemedText>
+            <ThemedText
+              style={styles.formSubtitle}
+              lightColor="#6B7280"
+              darkColor="#9CA3AF"
+            >
+              Preencha os dados abaixo para {id ? "atualizar" : "cadastrar"} a
+              OS
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
 
         {/* Campos do Formulário */}
-        <ThemedView style={styles.formFields}>
+        <ThemedView
+          style={styles.formFields}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
           {/* Seção Cliente */}
-          <ThemedView style={styles.sectionContainer}>
-            <ThemedView style={styles.sectionHeader}>
-              <MaterialCommunityIcons
-                name="account"
-                size={20}
-                color="#6B7280"
-              />
-              <ThemedText style={styles.sectionTitle}>Cliente</ThemedText>
+          <ThemedView
+            style={styles.sectionContainer}
+            lightColor="#FFFFFF"
+            darkColor="#1F2937"
+          >
+            <ThemedView
+              style={styles.sectionHeader}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.sectionIconBadge}
+                lightColor="#EFF6FF"
+                darkColor="#1E3A8A"
+              >
+                <MaterialCommunityIcons
+                  name="account"
+                  size={20}
+                  color="#3B82F6"
+                />
+              </ThemedView>
+              <ThemedText
+                style={styles.sectionTitle}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                Cliente
+              </ThemedText>
             </ThemedView>
 
             <UISelectClient
+              label="Cliente"
               onChangeClientId={setClientId}
               error={errors.clientId}
               clientId={clientId}
               disabled={!!id}
+              required
             />
           </ThemedView>
 
           {/* Seção OS */}
-          <ThemedView style={styles.sectionContainer}>
-            <ThemedView style={styles.sectionHeader}>
-              <MaterialCommunityIcons
-                name="file-document"
-                size={20}
-                color="#6B7280"
-              />
-              <ThemedText style={styles.sectionTitle}>
-                Ordem de Serviço
+          <ThemedView
+            style={styles.sectionContainer}
+            lightColor="#FFFFFF"
+            darkColor="#1F2937"
+          >
+            <ThemedView
+              style={styles.sectionHeader}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.sectionIconBadge}
+                lightColor="#FEF3C7"
+                darkColor="#78350F"
+              >
+                <MaterialCommunityIcons
+                  name="file-document"
+                  size={20}
+                  color="#F59E0B"
+                />
+              </ThemedView>
+              <ThemedText
+                style={styles.sectionTitle}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                Dados da Ordem
               </ThemedText>
             </ThemedView>
 
@@ -352,6 +427,7 @@ export default function ServiceFormPage() {
               error={errors.numeroOs}
               icon="pound"
               editable={false}
+              required
             />
 
             <UIInput
@@ -374,10 +450,34 @@ export default function ServiceFormPage() {
           </ThemedView>
 
           {/* Seção Equipamento */}
-          <ThemedView style={styles.sectionContainer}>
-            <ThemedView style={styles.sectionHeader}>
-              <MaterialCommunityIcons name="tools" size={20} color="#6B7280" />
-              <ThemedText style={styles.sectionTitle}>Equipamento</ThemedText>
+          <ThemedView
+            style={styles.sectionContainer}
+            lightColor="#FFFFFF"
+            darkColor="#1F2937"
+          >
+            <ThemedView
+              style={styles.sectionHeader}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.sectionIconBadge}
+                lightColor="#DBEAFE"
+                darkColor="#1E3A8A"
+              >
+                <MaterialCommunityIcons
+                  name="tools"
+                  size={20}
+                  color="#3B82F6"
+                />
+              </ThemedView>
+              <ThemedText
+                style={styles.sectionTitle}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                Equipamento
+              </ThemedText>
             </ThemedView>
 
             <UIInput
@@ -414,18 +514,49 @@ export default function ServiceFormPage() {
           </ThemedView>
 
           {/* Seção Serviços */}
-          <ThemedView style={styles.sectionContainer}>
-            <ThemedView style={styles.sectionHeader}>
-              <MaterialCommunityIcons name="wrench" size={20} color="#6B7280" />
-              <ThemedText style={styles.sectionTitle}>Serviços</ThemedText>
+          <ThemedView
+            style={styles.sectionContainer}
+            lightColor="#FFFFFF"
+            darkColor="#1F2937"
+          >
+            <ThemedView
+              style={styles.sectionHeader}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.sectionIconBadge}
+                lightColor="#D1FAE5"
+                darkColor="#064E3B"
+              >
+                <MaterialCommunityIcons
+                  name="wrench"
+                  size={20}
+                  color="#10B981"
+                />
+              </ThemedView>
+              <ThemedText
+                style={styles.sectionTitle}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                Serviços e Valores
+              </ThemedText>
             </ThemedView>
 
             <UIInput
               label="Serviços Realizados"
               placeholder="Descreva os serviços realizados..."
               value={servicosRealizados}
-              onChangeText={setServicosRealizados}
+              onChangeText={(text) => {
+                setServicosRealizados(text);
+                if (errors.servicosRealizados) {
+                  setErrors((prev) => ({ ...prev, servicosRealizados: "" }));
+                }
+              }}
+              error={errors.servicosRealizados}
               icon="clipboard-text"
+              required
             />
 
             <UIInput
@@ -457,8 +588,29 @@ export default function ServiceFormPage() {
               keyboardType="numeric"
             />
 
-            <ThemedView style={styles.totalContainer}>
-              <ThemedText style={styles.totalLabel}>Valor Total:</ThemedText>
+            <ThemedView
+              style={styles.totalContainer}
+              lightColor="#EFF6FF"
+              darkColor="#1E3A8A"
+            >
+              <ThemedView
+                style={styles.totalLeft}
+                lightColor="transparent"
+                darkColor="transparent"
+              >
+                <MaterialCommunityIcons
+                  name="calculator"
+                  size={24}
+                  color="#3B82F6"
+                />
+                <ThemedText
+                  style={styles.totalLabel}
+                  lightColor="#1F2937"
+                  darkColor="#E5E7EB"
+                >
+                  Valor Total
+                </ThemedText>
+              </ThemedView>
               <ThemedText style={styles.totalValue}>
                 R${" "}
                 {parseFloat(valorTotal || "0")
@@ -469,14 +621,34 @@ export default function ServiceFormPage() {
           </ThemedView>
 
           {/* Seção Observações */}
-          <ThemedView style={styles.sectionContainer}>
-            <ThemedView style={styles.sectionHeader}>
-              <MaterialCommunityIcons
-                name="note-text"
-                size={20}
-                color="#6B7280"
-              />
-              <ThemedText style={styles.sectionTitle}>Observações</ThemedText>
+          <ThemedView
+            style={styles.sectionContainer}
+            lightColor="#FFFFFF"
+            darkColor="#1F2937"
+          >
+            <ThemedView
+              style={styles.sectionHeader}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.sectionIconBadge}
+                lightColor="#F3F4F6"
+                darkColor="#374151"
+              >
+                <MaterialCommunityIcons
+                  name="note-text"
+                  size={20}
+                  color="#6B7280"
+                />
+              </ThemedView>
+              <ThemedText
+                style={styles.sectionTitle}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                Informações Adicionais
+              </ThemedText>
             </ThemedView>
 
             <UIInput
@@ -502,21 +674,36 @@ export default function ServiceFormPage() {
         </ThemedView>
 
         {/* Botões de Ação */}
-        <ThemedView style={styles.buttonContainer}>
+        <ThemedView
+          style={styles.buttonContainer}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
           <Pressable
-            style={[styles.button, styles.cancelButton]}
+            style={({ pressed }) => [
+              styles.button,
+              styles.cancelButton,
+              pressed && { opacity: 0.7 },
+            ]}
             onPress={() => router.back()}
             disabled={loading}
           >
             <MaterialCommunityIcons name="close" size={20} color="#6B7280" />
-            <ThemedText style={styles.cancelButtonText}>Cancelar</ThemedText>
+            <ThemedText
+              style={styles.cancelButtonText}
+              lightColor="#6B7280"
+              darkColor="#9CA3AF"
+            >
+              Cancelar
+            </ThemedText>
           </Pressable>
 
           <Pressable
-            style={[
+            style={({ pressed }) => [
               styles.button,
               styles.saveButton,
               loading && styles.buttonDisabled,
+              pressed && !loading && { opacity: 0.9 },
             ]}
             onPress={handleSave}
             disabled={loading}
@@ -524,15 +711,17 @@ export default function ServiceFormPage() {
             {loading ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <MaterialCommunityIcons
-                name={id ? "content-save" : "plus"}
-                size={20}
-                color="white"
-              />
+              <>
+                <MaterialCommunityIcons
+                  name={id ? "content-save" : "plus"}
+                  size={20}
+                  color="white"
+                />
+                <ThemedText style={styles.saveButtonText}>
+                  {id ? "Atualizar" : "Cadastrar"}
+                </ThemedText>
+              </>
             )}
-            <ThemedText style={styles.saveButtonText}>
-              {loading ? "Salvando..." : id ? "Atualizar" : "Cadastrar"}
-            </ThemedText>
           </Pressable>
         </ThemedView>
       </PageContainer>
@@ -541,27 +730,92 @@ export default function ServiceFormPage() {
 }
 
 const styles = StyleSheet.create({
+  // Header do Formulário
+  formHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    marginBottom: 32,
+  },
+  headerIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTextContainer: {
+    flex: 1,
+    gap: 4,
+  },
+  formTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  formSubtitle: {
+    fontSize: 15,
+  },
+
   // Form Fields
   formFields: {
-    gap: 36,
+    gap: 24,
   },
 
   sectionContainer: {
-    // paddingTop: 12,
+    padding: 20,
     borderRadius: 12,
-    gap: 12,
+    gap: 16,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    borderLeftWidth: 4,
+    borderLeftColor: "#3B82F6",
   },
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 12,
+    marginBottom: 4,
+  },
+  sectionIconBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#374151",
+    fontWeight: "700",
   },
 
+  totalContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 12,
+    marginTop: 8,
+  },
+  totalLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  totalLabel: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  totalValue: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#3B82F6",
+    letterSpacing: -0.5,
+  },
+
+  // Button Styles
   buttonContainer: {
     flexDirection: "row",
     gap: 12,
@@ -585,7 +839,6 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#6B7280",
   },
   saveButton: {
     backgroundColor: "#3B82F6",
@@ -597,25 +850,5 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: "#9CA3AF",
-  },
-
-  totalContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#EBF4FF",
-    borderRadius: 12,
-    marginTop: 8,
-  },
-  totalLabel: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#374151",
-  },
-  totalValue: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#3B82F6",
   },
 });

@@ -1,7 +1,12 @@
 import { ThemedView } from "@/components/themed-view";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import type { PropsWithChildren } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = PropsWithChildren<{
@@ -21,12 +26,19 @@ export default function PageContainer({
   if (scrollable) {
     return (
       <SafeAreaView style={styles.container} edges={edges}>
-        <ScrollView
-          style={[styles.container, { backgroundColor }]}
-          contentContainerStyle={styles.contentContainer}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.container}
         >
-          <ThemedView style={styles.content}>{children}</ThemedView>
-        </ScrollView>
+          <ScrollView
+            style={[styles.container, { backgroundColor }]}
+            contentContainerStyle={styles.contentContainer}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <ThemedView style={styles.content}>{children}</ThemedView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }

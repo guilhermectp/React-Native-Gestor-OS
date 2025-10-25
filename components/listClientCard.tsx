@@ -47,7 +47,6 @@ export default function ListClientCard({ data, onEdit, onDelete }: Props) {
 
   const formatPhone = (phone?: string) => {
     if (!phone) return null;
-
     return phone;
   };
 
@@ -73,99 +72,171 @@ export default function ListClientCard({ data, onEdit, onDelete }: Props) {
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        {/* Header com Avatar e Nome */}
-        <ThemedView style={styles.headerSection}>
-          <ThemedView style={styles.avatar}>
-            <ThemedText style={styles.avatarText}>
-              {getInitials(data.nome)}
-            </ThemedText>
-          </ThemedView>
-
-          <ThemedView style={styles.nameSection}>
-            <ThemedText style={styles.clientName} numberOfLines={1}>
-              {data.nome}
-            </ThemedText>
-          </ThemedView>
-        </ThemedView>
-
-        {/* Informações de Contato */}
-        <ThemedView style={styles.infoSection}>
-          {data.telefone && (
-            <ThemedView style={styles.infoRow}>
-              <MaterialCommunityIcons name="phone" size={16} color="#10B981" />
-              <ThemedText style={styles.infoText}>
-                {formatPhone(data.telefone)}
+        <ThemedView
+          style={styles.cardInner}
+          lightColor="#FFFFFF"
+          darkColor="#1F2937"
+        >
+          {/* Header com Avatar e Nome */}
+          <ThemedView
+            style={styles.headerSection}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={styles.avatar}
+              lightColor="#EFF6FF"
+              darkColor="#1E3A8A"
+            >
+              <ThemedText
+                style={styles.avatarText}
+                lightColor="#3B82F6"
+                darkColor="#60A5FA"
+              >
+                {getInitials(data.nome)}
               </ThemedText>
             </ThemedView>
-          )}
 
-          <ThemedView style={styles.infoRow}>
-            <MaterialCommunityIcons
-              name="map-marker"
-              size={16}
-              color="#F59E0B"
-            />
-            <ThemedText style={styles.infoText} numberOfLines={2}>
-              {formatAddress()}
-            </ThemedText>
+            <ThemedView
+              style={styles.nameSection}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedText
+                style={styles.clientName}
+                numberOfLines={1}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                {data.nome}
+              </ThemedText>
+            </ThemedView>
           </ThemedView>
-        </ThemedView>
 
-        {/* Seção de Ações */}
-        <ThemedView style={styles.actionsSection}>
-          <ThemedView style={styles.actionButtons}>
-            {/* WhatsApp Button */}
+          {/* Informações de Contato */}
+          <ThemedView
+            style={styles.infoSection}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
             {data.telefone && (
-              <TouchableOpacity
-                style={[styles.actionButton, styles.whatsappButton]}
-                onPress={(e) => {
-                  e.stopPropagation();
-                  handleWhatsAppPress();
-                }}
-                activeOpacity={0.7}
+              <ThemedView
+                style={styles.infoRow}
+                lightColor="transparent"
+                darkColor="transparent"
               >
-                <MaterialCommunityIcons
-                  name="whatsapp"
-                  size={20}
-                  color="white"
-                />
-              </TouchableOpacity>
+                <ThemedView
+                  style={styles.iconBadge}
+                  lightColor="#D1FAE5"
+                  darkColor="#064E3B"
+                >
+                  <MaterialCommunityIcons
+                    name="phone"
+                    size={16}
+                    color="#10B981"
+                  />
+                </ThemedView>
+                <ThemedText
+                  style={styles.infoText}
+                  lightColor="#6B7280"
+                  darkColor="#9CA3AF"
+                >
+                  {formatPhone(data.telefone)}
+                </ThemedText>
+              </ThemedView>
             )}
 
-            {/* Edit Button */}
-            {onEdit && (
-              <TouchableOpacity
-                style={[styles.actionButton, styles.editButton]}
-                onPress={(e) => {
-                  e.stopPropagation();
-                  onEdit();
-                }}
-                activeOpacity={0.7}
+            <ThemedView
+              style={styles.infoRow}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.iconBadge}
+                lightColor="#FEF3C7"
+                darkColor="#78350F"
               >
                 <MaterialCommunityIcons
-                  name="pencil"
-                  size={18}
-                  color="#1E40AF"
+                  name="map-marker"
+                  size={16}
+                  color="#F59E0B"
                 />
-              </TouchableOpacity>
-            )}
+              </ThemedView>
+              <ThemedText
+                style={styles.infoText}
+                numberOfLines={2}
+                lightColor="#6B7280"
+                darkColor="#9CA3AF"
+              >
+                {formatAddress()}
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
 
-            {onDelete && (
-              <TouchableOpacity
-                style={[styles.actionButton, styles.deleteButton]}
-                onPress={(e) => {
-                  e.stopPropagation();
-                  onDelete();
-                }}
-                activeOpacity={0.7}
-              >
-                <MaterialCommunityIcons
-                  name="delete"
-                  size={18}
-                  color="#EF4444"
-                />
-              </TouchableOpacity>
-            )}
+          {/* Seção de Ações */}
+          <ThemedView
+            style={styles.actionsSection}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={styles.actionButtons}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              {/* WhatsApp Button */}
+              {data.telefone && (
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.whatsappButton]}
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    handleWhatsAppPress();
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <MaterialCommunityIcons
+                    name="whatsapp"
+                    size={20}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              )}
+
+              {/* Edit Button */}
+              {onEdit && (
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.editButton]}
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    onEdit();
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    size={18}
+                    color="#3B82F6"
+                  />
+                </TouchableOpacity>
+              )}
+
+              {onDelete && (
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.deleteButton]}
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    onDelete();
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={18}
+                    color="#EF4444"
+                  />
+                </TouchableOpacity>
+              )}
+            </ThemedView>
           </ThemedView>
         </ThemedView>
       </Pressable>
@@ -175,84 +246,90 @@ export default function ListClientCard({ data, onEdit, onDelete }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 16,
-    elevation: 3,
+    borderRadius: 12,
+    marginBottom: 12,
+    elevation: 2,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: "#1E40AF",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
   },
   cardPressed: {
     elevation: 1,
     shadowOpacity: 0.05,
+  },
+  cardInner: {
+    borderRadius: 12,
+    padding: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: "#3B82F6",
   },
 
   // Header Section
   headerSection: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 16,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
-    backgroundColor: "#1E40AF",
   },
   avatarText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
+    fontSize: 20,
+    fontWeight: "700",
   },
   nameSection: {
     flex: 1,
   },
   clientName: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#1F2937",
-    marginBottom: 2,
+    fontWeight: "700",
   },
 
   // Info Section
   infoSection: {
-    gap: 8,
+    gap: 12,
     marginBottom: 16,
   },
   infoRow: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
+    alignItems: "center",
+    gap: 12,
+  },
+  iconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
   infoText: {
     fontSize: 14,
-    color: "#6B7280",
     flex: 1,
     lineHeight: 20,
+    fontWeight: "500",
   },
 
   // Actions Section
   actionsSection: {
     borderTopWidth: 1,
-    borderTopColor: "#F3F4F6",
+    borderTopColor: "#E5E7EB",
     paddingTop: 12,
   },
   actionButtons: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    gap: 12,
+    gap: 8,
   },
   actionButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     elevation: 2,
@@ -265,7 +342,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#25D366",
   },
   editButton: {
-    backgroundColor: "#EBF4FF",
+    backgroundColor: "#EFF6FF",
     borderWidth: 1,
     borderColor: "#BFDBFE",
   },

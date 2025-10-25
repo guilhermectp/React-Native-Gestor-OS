@@ -1,8 +1,9 @@
 import { IServiceWithClient } from "@/database/useServiceOrderDatabase";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRef, useState } from "react";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { Animated, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { ThemedText } from "./themed-text";
+import { ThemedView } from "./themed-view";
 
 type ServiceOrderStatus =
   | "pendente"
@@ -20,6 +21,8 @@ type Props = {
 export default function ListServiceCard({ data, onOpen }: Props) {
   const [isPressed, setIsPressed] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
 
   const handlePressIn = () => {
     setIsPressed(true);
@@ -53,24 +56,28 @@ export default function ListServiceCard({ data, onOpen }: Props) {
         label: "Pendente",
         color: "#F59E0B",
         bgColor: "#FEF3C7",
+        bgColorDark: "#78350F",
         icon: "clock-outline",
       },
       em_andamento: {
         label: "Em Andamento",
         color: "#3B82F6",
         bgColor: "#DBEAFE",
+        bgColorDark: "#1E3A8A",
         icon: "wrench",
       },
       concluido: {
         label: "Concluído",
         color: "#10B981",
         bgColor: "#D1FAE5",
+        bgColorDark: "#064E3B",
         icon: "check-circle",
       },
       cancelado: {
         label: "Cancelado",
         color: "#EF4444",
         bgColor: "#FEE2E2",
+        bgColorDark: "#7F1D1D",
         icon: "close-circle",
       },
     };
@@ -89,70 +96,156 @@ export default function ListServiceCard({ data, onOpen }: Props) {
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        {/* Header */}
-        <View style={styles.headerSection}>
-          <View style={styles.osNumberContainer}>
-            <MaterialCommunityIcons
-              name="file-document"
-              size={20}
-              color="#3B82F6"
-            />
-            <ThemedText style={styles.osNumber}>
-              OS #{data.numero_os}
-            </ThemedText>
-          </View>
-
-          <Pressable
-            style={[
-              styles.statusBadge,
-              { backgroundColor: statusConfig.bgColor },
-            ]}
+        <ThemedView
+          style={styles.cardInner}
+          lightColor="#FFFFFF"
+          darkColor="#1F2937"
+        >
+          {/* Header */}
+          <ThemedView
+            style={styles.headerSection}
+            lightColor="transparent"
+            darkColor="transparent"
           >
-            <MaterialCommunityIcons
-              name={statusConfig.icon as any}
-              size={14}
-              color={statusConfig.color}
-            />
-            <ThemedText
-              style={[styles.statusText, { color: statusConfig.color }]}
+            <ThemedView
+              style={styles.osNumberContainer}
+              lightColor="transparent"
+              darkColor="transparent"
             >
-              {statusConfig.label}
-            </ThemedText>
-          </Pressable>
-        </View>
-
-        {/* Info */}
-        <View style={styles.infoSection}>
-          <View style={styles.infoRow}>
-            <View style={styles.infoRow}>
-              <MaterialCommunityIcons
-                name="account"
-                size={16}
-                color="#6B7280"
-              />
-              <ThemedText style={styles.clientName} numberOfLines={1}>
-                {data.client_nome}
+              <ThemedView
+                style={styles.osIconBadge}
+                lightColor="#EFF6FF"
+                darkColor="#1E3A8A"
+              >
+                <MaterialCommunityIcons
+                  name="file-document"
+                  size={20}
+                  color="#3B82F6"
+                />
+              </ThemedView>
+              <ThemedText
+                style={styles.osNumber}
+                lightColor="#111827"
+                darkColor="#F9FAFB"
+              >
+                OS #{data.numero_os}
               </ThemedText>
-            </View>
+            </ThemedView>
 
-            <View style={styles.infoRow}>
+            <ThemedView
+              style={[
+                styles.statusBadge,
+                {
+                  backgroundColor: isDark
+                    ? statusConfig.bgColorDark
+                    : statusConfig.bgColor,
+                },
+              ]}
+            >
               <MaterialCommunityIcons
-                name="calendar"
-                size={16}
-                color="#9CA3AF"
+                name={statusConfig.icon as any}
+                size={14}
+                color={statusConfig.color}
               />
-              <ThemedText>{formatDate(data.data_servico)}</ThemedText>
-            </View>
-          </View>
+              <ThemedText
+                style={[styles.statusText, { color: statusConfig.color }]}
+              >
+                {statusConfig.label}
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
 
-          {/* Resumo */}
-          <View style={styles.infoContent}>
-            <MaterialCommunityIcons name="tools" size={16} color="#10B981" />
-            <ThemedText numberOfLines={2}>
-              {truncateText(data.servicos_realizados, 80)}
-            </ThemedText>
-          </View>
-        </View>
+          {/* Info */}
+          <ThemedView
+            style={styles.infoSection}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={styles.infoRow}
+              lightColor="transparent"
+              darkColor="transparent"
+            >
+              <ThemedView
+                style={styles.infoItem}
+                lightColor="transparent"
+                darkColor="transparent"
+              >
+                <ThemedView
+                  style={styles.infoIconBadge}
+                  lightColor="#EFF6FF"
+                  darkColor="#1E3A8A"
+                >
+                  <MaterialCommunityIcons
+                    name="account"
+                    size={16}
+                    color="#3B82F6"
+                  />
+                </ThemedView>
+                <ThemedText
+                  style={styles.clientName}
+                  numberOfLines={1}
+                  lightColor="#1F2937"
+                  darkColor="#F9FAFB"
+                >
+                  {data.client_nome}
+                </ThemedText>
+              </ThemedView>
+
+              <ThemedView
+                style={styles.infoItem}
+                lightColor="transparent"
+                darkColor="transparent"
+              >
+                <ThemedView
+                  style={styles.infoIconBadge}
+                  lightColor="#F3F4F6"
+                  darkColor="#374151"
+                >
+                  <MaterialCommunityIcons
+                    name="calendar"
+                    size={16}
+                    color="#9CA3AF"
+                  />
+                </ThemedView>
+                <ThemedText
+                  style={styles.dateText}
+                  lightColor="#6B7280"
+                  darkColor="#9CA3AF"
+                >
+                  {formatDate(data.data_servico)}
+                </ThemedText>
+              </ThemedView>
+            </ThemedView>
+
+            {/* Resumo */}
+            <ThemedView
+              style={styles.infoContent}
+              lightColor="#F9FAFB"
+              darkColor="#374151"
+            >
+              <ThemedView
+                style={styles.serviceIconBadge}
+                lightColor="#D1FAE5"
+                darkColor="#064E3B"
+              >
+                <MaterialCommunityIcons
+                  name="tools"
+                  size={16}
+                  color="#10B981"
+                />
+              </ThemedView>
+              <ThemedText
+                numberOfLines={2}
+                style={styles.serviceText}
+                lightColor="#374151"
+                darkColor="#D1D5DB"
+              >
+                {truncateText(data.servicos_realizados, 80)}
+              </ThemedText>
+            </ThemedView>
+          </ThemedView>
+        </ThemedView>
       </Pressable>
     </Animated.View>
   );
@@ -160,23 +253,25 @@ export default function ListServiceCard({ data, onOpen }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 6,
+    marginBottom: 12,
   },
   card: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 16,
-    elevation: 3,
+    borderRadius: 12,
+    elevation: 2,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: "#3B82F6",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
   },
   cardPressed: {
     elevation: 1,
     shadowOpacity: 0.05,
+  },
+  cardInner: {
+    borderRadius: 12,
+    padding: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: "#3B82F6",
   },
 
   // Header
@@ -184,106 +279,86 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 16,
   },
   osNumberContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 12,
+  },
+  osIconBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
   osNumber: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#1F2937",
+    fontWeight: "700",
   },
   statusBadge: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
-    paddingHorizontal: 10,
+    gap: 6,
+    paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   statusText: {
     fontSize: 12,
     fontWeight: "600",
   },
 
-  // Cliente
-  clientSection: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    marginBottom: 12,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
-  },
-  clientName: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#374151",
-    // flex: 1,
-  },
-
   // Info Section
   infoSection: {
-    gap: 8,
-  },
-  infoContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    // justifyContent: "space-between",
+    gap: 12,
   },
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 8,
+    gap: 12,
   },
-
-  // Actions
-  actionsSection: {
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: "#F3F4F6",
-  },
-  actionButtons: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  actionButton: {
+  infoItem: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 10,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  viewButton: {
-    backgroundColor: "#3B82F6",
+    gap: 8,
     flex: 1,
   },
-  whatsappButton: {
-    backgroundColor: "#25D366",
-    width: 44,
-    paddingHorizontal: 0,
+  infoIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  shareButton: {
-    backgroundColor: "#F3F4F6",
-    width: 44,
-    paddingHorizontal: 0,
-  },
-  actionButtonText: {
-    color: "white",
-    fontSize: 14,
+  clientName: {
+    fontSize: 15,
     fontWeight: "600",
+    flex: 1,
+  },
+  dateText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  infoContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 12,
+    borderRadius: 10,
+  },
+  serviceIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  serviceText: {
+    fontSize: 14,
+    flex: 1,
+    lineHeight: 20,
   },
 });

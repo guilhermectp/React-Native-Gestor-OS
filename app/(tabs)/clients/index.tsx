@@ -48,7 +48,7 @@ export default function ClientListPage() {
           onPress: async () => {
             try {
               await clientDatabase.remove(id);
-              loadClients(); // Recarrega a lista
+              loadClients();
               Alert.alert("Sucesso", "Cliente excluído com sucesso");
             } catch (error) {
               Alert.alert(
@@ -64,9 +64,37 @@ export default function ClientListPage() {
   }
 
   const renderEmptyList = () => (
-    <ThemedView style={styles.emptyContainer}>
-      <ThemedText style={styles.emptyText}>
+    <ThemedView
+      style={styles.emptyContainer}
+      lightColor="transparent"
+      darkColor="transparent"
+    >
+      <ThemedView
+        style={styles.emptyIconContainer}
+        lightColor="#F3F4F6"
+        darkColor="#374151"
+      >
+        <MaterialCommunityIcons
+          name="account-outline"
+          size={64}
+          color="#9CA3AF"
+        />
+      </ThemedView>
+      <ThemedText
+        style={styles.emptyTitle}
+        lightColor="#111827"
+        darkColor="#F9FAFB"
+      >
         {searchBy ? "Nenhum cliente encontrado" : "Nenhum cliente cadastrado"}
+      </ThemedText>
+      <ThemedText
+        style={styles.emptyText}
+        lightColor="#6B7280"
+        darkColor="#9CA3AF"
+      >
+        {searchBy
+          ? "Tente ajustar sua busca"
+          : "Comece cadastrando seu primeiro cliente"}
       </ThemedText>
     </ThemedView>
   );
@@ -78,7 +106,48 @@ export default function ClientListPage() {
 
   return (
     <PageContainer>
-      <ThemedView style={styles.searchContainer}>
+      {/* Header com contador */}
+      <ThemedView
+        style={styles.header}
+        lightColor="transparent"
+        darkColor="transparent"
+      >
+        <ThemedView lightColor="transparent" darkColor="transparent">
+          {/* <ThemedText type="title" lightColor="#111827" darkColor="#F9FAFB">
+            Clientes
+          </ThemedText> */}
+          <ThemedText
+            style={styles.subtitle}
+            lightColor="#6B7280"
+            darkColor="#9CA3AF"
+          >
+            {clients.length} {clients.length === 1 ? "cliente" : "clientes"}{" "}
+            {searchBy ? "encontrado(s)" : "cadastrado(s)"}
+          </ThemedText>
+        </ThemedView>
+      </ThemedView>
+
+      {/* Container de busca */}
+      <ThemedView
+        style={styles.searchContainer}
+        lightColor="transparent"
+        darkColor="transparent"
+      >
+        {/* <ThemedView
+          style={styles.searchHeader}
+          lightColor="transparent"
+          darkColor="transparent"
+        >
+          <MaterialCommunityIcons name="magnify" size={24} color="#3B82F6" />
+          <ThemedText
+            style={styles.searchTitle}
+            lightColor="#111827"
+            darkColor="#F9FAFB"
+          >
+            Buscar Cliente
+          </ThemedText>
+        </ThemedView> */}
+
         <UIInput
           placeholder="Buscar cliente por nome..."
           onChangeText={setSearchBy}
@@ -86,40 +155,87 @@ export default function ClientListPage() {
           icon="account-search"
           value={searchBy}
         />
+
+        {searchBy && (
+          <ThemedView
+            style={styles.filterBadgeContainer}
+            lightColor="transparent"
+            darkColor="transparent"
+          >
+            <ThemedView
+              style={styles.filterBadge}
+              lightColor="#EFF6FF"
+              darkColor="#1E3A8A"
+            >
+              <MaterialCommunityIcons
+                name="filter-check"
+                size={16}
+                color="#3B82F6"
+              />
+              <ThemedText style={styles.filterBadgeText}>
+                Buscando por {searchBy}
+              </ThemedText>
+            </ThemedView>
+            <Pressable
+              onPress={() => setSearchBy("")}
+              style={styles.clearButton}
+            >
+              <ThemedText style={styles.clearButtonText}>Limpar</ThemedText>
+            </Pressable>
+          </ThemedView>
+        )}
       </ThemedView>
 
-      <FlatList
-        data={clients}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => (
-          <ListClientCard
-            data={item}
-            onDelete={() => removeClient(item.id)}
-            onEdit={() =>
-              router.push({
-                pathname: "/clients/form",
-                params: { clientId: String(item.id) },
-              })
-            }
-          />
-        )}
-        contentContainerStyle={[
-          styles.listContainer,
-          clients.length === 0 && styles.emptyListContainer,
-        ]}
-        ItemSeparatorComponent={() => <ThemedView style={styles.separator} />}
-        ListEmptyComponent={!loading ? renderEmptyList : null}
-        refreshing={loading}
-        onRefresh={loadClients}
-        scrollEnabled={false}
-        nestedScrollEnabled={true}
-      />
-
-      <Pressable
-        style={[styles.button]}
-        onPress={() => router.push("/clients/form")}
+      {/* Lista de clientes */}
+      <ThemedView
+        style={styles.listWrapper}
+        lightColor="transparent"
+        darkColor="transparent"
       >
-        <MaterialCommunityIcons name="plus" size={28} color="white" />
+        <FlatList
+          data={clients}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => (
+            <ListClientCard
+              data={item}
+              onDelete={() => removeClient(item.id)}
+              onEdit={() =>
+                router.push({
+                  pathname: "/clients/form",
+                  params: { clientId: String(item.id) },
+                })
+              }
+            />
+          )}
+          contentContainerStyle={[
+            styles.listContainer,
+            clients.length === 0 && styles.emptyListContainer,
+          ]}
+          ItemSeparatorComponent={() => (
+            <ThemedView
+              style={styles.separator}
+              lightColor="transparent"
+              darkColor="transparent"
+            />
+          )}
+          ListEmptyComponent={!loading ? renderEmptyList : null}
+          refreshing={loading}
+          onRefresh={loadClients}
+          scrollEnabled={false}
+          nestedScrollEnabled={true}
+        />
+      </ThemedView>
+
+      {/* Botão de adicionar */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.button,
+          pressed && styles.buttonPressed,
+        ]}
+        onPress={() => router.push("/clients/form")}
+        disabled={loading}
+      >
+        <MaterialCommunityIcons name="plus" size={24} color="white" />
         <ThemedText style={styles.buttonText}>Novo Cliente</ThemedText>
       </Pressable>
     </PageContainer>
@@ -127,23 +243,72 @@ export default function ClientListPage() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    // marginBottom: 20,
+    gap: 4,
+  },
+  subtitle: {
+    fontSize: 15,
+  },
+
   searchContainer: {
+    gap: 16,
+    // paddingVertical: 20,
+    // paddingHorizontal: 20,
+    // borderRadius: 16,
+    // marginBottom: 16,
+    // elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+
     borderBottomWidth: 1,
     borderBottomColor: "#E5E7EB",
     paddingBottom: 16,
   },
-
-  emptyContainer: {
+  searchHeader: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 40,
+    gap: 12,
+    marginBottom: 4,
   },
-  emptyText: {
-    fontSize: 16,
-    color: "#6B7280",
-    textAlign: "center",
+  searchTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  filterBadgeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 4,
+  },
+  filterBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+  },
+  filterBadgeText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#3B82F6",
+  },
+  clearButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  clearButtonText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#EF4444",
   },
 
+  listWrapper: {
+    flex: 1,
+  },
   listContainer: {
     padding: 4,
   },
@@ -152,22 +317,50 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   separator: {
-    height: 12,
+    height: 16,
+  },
+
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 60,
+    gap: 16,
+  },
+  emptyIconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  emptyText: {
+    fontSize: 15,
+    textAlign: "center",
+    maxWidth: 280,
+    lineHeight: 22,
   },
 
   button: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding: 8,
-    borderRadius: 4,
-    gap: 8,
-    elevation: 1,
-    backgroundColor: "#1E40AF",
+    padding: 14,
+    borderRadius: 8,
+    gap: 10,
+    backgroundColor: "#3B82F6",
+  },
+  buttonPressed: {
+    opacity: 0.9,
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 17,
+    fontWeight: "bold",
     color: "white",
   },
 });

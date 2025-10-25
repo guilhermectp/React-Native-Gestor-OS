@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { ThemedText } from "../themed-text";
+import { ThemedView } from "../themed-view";
 import UIInput from "./UIInput";
 
 interface ClientSelectorModalProps {
@@ -69,101 +70,152 @@ export default function UISelectClientModal({
           style={styles.modalContent}
           onPress={(e) => e.stopPropagation()}
         >
-          {/* Drag Indicator */}
-          <View style={styles.dragIndicatorContainer}>
-            <View style={styles.dragIndicator} />
-          </View>
-
-          {/* Header */}
-          <View style={styles.modalHeader}>
-            <View style={styles.headerLeft}>
-              <MaterialCommunityIcons
-                name="account-search"
-                size={24}
-                color="#3B82F6"
-              />
-              <ThemedText style={styles.modalTitle}>
-                Selecionar Cliente
-              </ThemedText>
+          <ThemedView
+            style={styles.modalInner}
+            lightColor="#FFFFFF"
+            darkColor="#1F2937"
+          >
+            {/* Drag Indicator */}
+            <View style={styles.dragIndicatorContainer}>
+              <View style={styles.dragIndicator} />
             </View>
-            <Pressable onPress={onClose} style={styles.closeButton}>
-              <MaterialCommunityIcons name="close" size={24} color="#6B7280" />
-            </Pressable>
-          </View>
 
-          {/* Search Input */}
-          <View style={styles.searchContainer}>
-            <UIInput
-              label=""
-              placeholder="Buscar por nome..."
-              value={searchClient}
-              onChangeText={setSearchClient}
-              icon="magnify"
-            />
-          </View>
-
-          {/* Client List */}
-          <FlatList
-            data={clients}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.clientItem}
-                onPress={() => selectClient(item)}
-                activeOpacity={0.7}
-              >
-                <View style={styles.clientItemLeft}>
-                  <View style={styles.avatarContainer}>
-                    <MaterialCommunityIcons
-                      name="account"
-                      size={24}
-                      color="#3B82F6"
-                    />
-                  </View>
-                  <View style={styles.clientInfo}>
-                    <ThemedText style={styles.clientItemName} numberOfLines={1}>
-                      {item.nome}
-                    </ThemedText>
-                    <ThemedText
-                      style={styles.clientItemAddress}
-                      numberOfLines={1}
-                    >
-                      {item.rua}, {item.numero} - {item.bairro}
-                    </ThemedText>
-                  </View>
-                </View>
-                <View style={styles.clientItemRight}>
-                  <ThemedText style={styles.clientItemPhone}>
-                    {item.telefone}
-                  </ThemedText>
+            {/* Header */}
+            <View style={styles.modalHeader}>
+              <View style={styles.headerLeft}>
+                <ThemedView
+                  style={styles.iconContainer}
+                  lightColor="#EFF6FF"
+                  darkColor="#1E3A8A"
+                >
                   <MaterialCommunityIcons
-                    name="chevron-right"
-                    size={20}
-                    color="#D1D5DB"
+                    name="account-search"
+                    size={24}
+                    color="#3B82F6"
                   />
-                </View>
-              </TouchableOpacity>
-            )}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.clientListContent}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            ListEmptyComponent={() => (
-              <View style={styles.emptyContainer}>
-                <MaterialCommunityIcons
-                  name="account-off-outline"
-                  size={48}
-                  color="#D1D5DB"
-                />
-                <ThemedText style={styles.emptyText}>
-                  {searchClient
-                    ? "Nenhum cliente encontrado"
-                    : "Nenhum cliente cadastrado"}
+                </ThemedView>
+                <ThemedText
+                  style={styles.modalTitle}
+                  lightColor="#111827"
+                  darkColor="#F9FAFB"
+                >
+                  Selecionar Cliente
                 </ThemedText>
               </View>
-            )}
-            refreshing={loading}
-            onRefresh={searchClients}
-          />
+              <Pressable onPress={onClose} style={styles.closeButton}>
+                <MaterialCommunityIcons
+                  name="close"
+                  size={24}
+                  color="#6B7280"
+                />
+              </Pressable>
+            </View>
+
+            {/* Search Input */}
+            <View style={styles.searchContainer}>
+              <UIInput
+                label=""
+                placeholder="Buscar por nome..."
+                value={searchClient}
+                onChangeText={setSearchClient}
+                icon="magnify"
+              />
+            </View>
+
+            {/* Client List */}
+            <FlatList
+              data={clients}
+              keyExtractor={(item) => String(item.id)}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.clientItem}
+                  onPress={() => selectClient(item)}
+                  activeOpacity={0.7}
+                >
+                  <ThemedView
+                    style={styles.clientItemContent}
+                    lightColor="#F9FAFB"
+                    darkColor="#374151"
+                  >
+                    <View style={styles.clientItemLeft}>
+                      <ThemedView
+                        style={styles.avatarContainer}
+                        lightColor="#EFF6FF"
+                        darkColor="#1E3A8A"
+                      >
+                        <MaterialCommunityIcons
+                          name="account"
+                          size={24}
+                          color="#3B82F6"
+                        />
+                      </ThemedView>
+                      <View style={styles.clientInfo}>
+                        <ThemedText
+                          style={styles.clientItemName}
+                          numberOfLines={1}
+                          lightColor="#111827"
+                          darkColor="#F9FAFB"
+                        >
+                          {item.nome}
+                        </ThemedText>
+                        <ThemedText
+                          style={styles.clientItemAddress}
+                          numberOfLines={1}
+                          lightColor="#6B7280"
+                          darkColor="#9CA3AF"
+                        >
+                          {item.rua}, {item.numero} - {item.bairro}
+                        </ThemedText>
+                      </View>
+                    </View>
+                    <View style={styles.clientItemRight}>
+                      <ThemedText
+                        style={styles.clientItemPhone}
+                        lightColor="#6B7280"
+                        darkColor="#9CA3AF"
+                      >
+                        {item.telefone}
+                      </ThemedText>
+                      <MaterialCommunityIcons
+                        name="chevron-right"
+                        size={20}
+                        color="#9CA3AF"
+                      />
+                    </View>
+                  </ThemedView>
+                </TouchableOpacity>
+              )}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.clientListContent}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+              ListEmptyComponent={() => (
+                <View style={styles.emptyContainer}>
+                  <ThemedView
+                    style={styles.emptyIconContainer}
+                    lightColor="#F3F4F6"
+                    darkColor="#374151"
+                  >
+                    <MaterialCommunityIcons
+                      name="account-off-outline"
+                      size={48}
+                      color="#9CA3AF"
+                    />
+                  </ThemedView>
+                  <ThemedText
+                    style={styles.emptyText}
+                    lightColor="#6B7280"
+                    darkColor="#9CA3AF"
+                  >
+                    {searchClient
+                      ? "Nenhum cliente encontrado"
+                      : "Nenhum cliente cadastrado"}
+                  </ThemedText>
+                </View>
+              )}
+              refreshing={loading}
+              onRefresh={searchClients}
+            />
+          </ThemedView>
         </Pressable>
       </Pressable>
     </Modal>
@@ -177,10 +229,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: "white",
+    height: "70%",
+  },
+  modalInner: {
+    flex: 1,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: "60%",
     paddingBottom: 0,
   },
   dragIndicatorContainer: {
@@ -190,7 +244,7 @@ const styles = StyleSheet.create({
   dragIndicator: {
     width: 40,
     height: 4,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: "#D1D5DB",
     borderRadius: 2,
   },
   modalHeader: {
@@ -205,10 +259,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   modalTitle: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#1F2937",
   },
   closeButton: {
     padding: 4,
@@ -217,20 +277,24 @@ const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: 20,
     paddingBottom: 16,
-    backgroundColor: "white",
     zIndex: 1,
   },
   clientListContent: {
     paddingHorizontal: 20,
-    paddingTop: 36,
+    paddingTop: 42,
     paddingBottom: 20,
     flexGrow: 1,
   },
   clientItem: {
+    marginBottom: 8,
+  },
+  clientItemContent: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 12,
   },
   clientItemLeft: {
     flexDirection: "row",
@@ -241,8 +305,7 @@ const styles = StyleSheet.create({
   avatarContainer: {
     width: 48,
     height: 48,
-    borderRadius: 24,
-    backgroundColor: "#EFF6FF",
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -253,11 +316,9 @@ const styles = StyleSheet.create({
   clientItemName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#1F2937",
   },
   clientItemAddress: {
     fontSize: 13,
-    color: "#9CA3AF",
   },
   clientItemRight: {
     flexDirection: "row",
@@ -266,24 +327,27 @@ const styles = StyleSheet.create({
   },
   clientItemPhone: {
     fontSize: 14,
-    color: "#6B7280",
     fontWeight: "500",
   },
   separator: {
-    height: 1,
-    backgroundColor: "#F3F4F6",
-    marginVertical: 0,
+    height: 8,
   },
   emptyContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 48,
-    gap: 12,
+    gap: 16,
+  },
+  emptyIconContainer: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    alignItems: "center",
+    justifyContent: "center",
   },
   emptyText: {
     textAlign: "center",
-    color: "#9CA3AF",
     fontSize: 16,
   },
 });
